@@ -82,9 +82,6 @@ class _CategoryPageState extends State<CategoryPage> {
     final String? bgImagePath = folderName != null
         ? 'assets/images/$folderName/bg-$folderName.png'
         : null;
-    final String? titleImagePath = folderName != null
-        ? 'assets/images/$folderName/title-${folderName}.png'
-        : null;
 
     return Scaffold(
       body: Container(
@@ -113,17 +110,12 @@ class _CategoryPageState extends State<CategoryPage> {
 
                         child: Image.asset(
                           'assets/images/common/back-arrow.png',
-                          width: 40,
-                          height: 40,
+                          width: 60,
+                          height: 60,
                         ),
                       ),
                     ),
                     const SizedBox(width: 16),
-                    if (titleImagePath != null)
-                      Image.asset(
-                        titleImagePath,
-                        height: 40, // Defina a altura desejada para a imagem
-                      ),
                   ],
                 ),
               ),

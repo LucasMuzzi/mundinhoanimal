@@ -26,9 +26,24 @@ class _HomePageState extends State<HomePage> {
   Future<void> _loadCategories() async {
     final List<String> assetPaths = await getAssetListFromRootBundle();
 
-    final List<Map<String, String>> loadedData = [];
-    final Set<String> categories = {};
+    final Map<String, List<String>> categoryAssets = {};
 
+    for (var path in assetPaths) {
+      if (path.startsWith('assets/images/')) {
+        final parts = path.split('/');
+        if (parts.length >= 3) {
+          final categoryName = parts[2];
+          if (categoryName.isNotEmpty) {
+            if (!categoryAssets.containsKey(categoryName)) {
+              categoryAssets[categoryName] = [];
+            }
+            categoryAssets[categoryName]!.add(path);
+          }
+        }
+      }
+    }
+
+    final List<Map<String, String>> loadedData = [];
     late Map<String, String> translations = {
       'dinos': 'Dinossauros',
       'farm': 'Fazenda',
@@ -36,17 +51,24 @@ class _HomePageState extends State<HomePage> {
       'pets': 'Pets',
     };
 
-    for (var path in assetPaths) {
-      if (path.startsWith('assets/images/') && path.contains('bg-')) {
-        final categoryName = path.split('/')[2];
+    for (final categoryName in categoryAssets.keys) {
+      final categoryFiles = categoryAssets[categoryName]!;
+      final bgImage = categoryFiles.firstWhere(
+        (path) => path.contains('bg-'),
+        orElse: () => '',
+      );
+      final titleImage = categoryFiles.firstWhere(
+        (path) => path.contains('title-'),
+        orElse: () => '',
+      );
+      final translatedTitle = translations[categoryName] ?? categoryName;
 
-        if (categoryName.isNotEmpty) {
-          final String translatedTitle =
-              translations[categoryName] ?? categoryName;
-          categories.add(categoryName);
-
-          loadedData.add({'title': translatedTitle, 'imagePath': path});
-        }
+      if (bgImage.isNotEmpty && titleImage.isNotEmpty) {
+        loadedData.add({
+          'title': translatedTitle,
+          'imagePath': bgImage,
+          'titleImagePath': titleImage,
+        });
       }
     }
 
@@ -109,10 +131,12 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (context, index) {
                     final item = cardData[index];
                     final String title = item['title']!;
+                    final String imagePath = item['imagePath']!;
+                    final String titleImagePath = item['titleImagePath']!;
 
                     return HomeCard(
-                      imagePath: item['imagePath']!,
-
+                      titleImagePath: titleImagePath,
+                      imagePath: imagePath,
                       onTap: () {
                         Navigator.push(
                           context,

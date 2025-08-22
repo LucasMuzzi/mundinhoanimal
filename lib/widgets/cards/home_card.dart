@@ -2,11 +2,16 @@
 import 'package:flutter/material.dart';
 
 class HomeCard extends StatelessWidget {
-  final String? title;
+  final String titleImagePath;
   final String imagePath;
   final VoidCallback? onTap;
 
-  const HomeCard({super.key, this.title, required this.imagePath, this.onTap});
+  const HomeCard({
+    super.key,
+    required this.titleImagePath,
+    required this.imagePath,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,25 +21,16 @@ class HomeCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
       child: InkWell(
         onTap: onTap,
-        child: Container(
-          height: 150,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(imagePath),
-              fit: BoxFit.cover,
+        child: Stack(
+          children: [
+            Positioned.fill(child: Image.asset(imagePath, fit: BoxFit.cover)),
+
+            Positioned.fill(
+              child: Container(color: Colors.black.withOpacity(0.4)),
             ),
-          ),
-          child: Center(
-            child: Text(
-              title ?? '',
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+
+            Center(child: Image.asset(titleImagePath, height: 100)),
+          ],
         ),
       ),
     );
