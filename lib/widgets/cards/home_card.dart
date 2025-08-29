@@ -1,4 +1,3 @@
-// lib/widgets/home_card.dart
 import 'package:flutter/material.dart';
 
 class HomeCard extends StatelessWidget {

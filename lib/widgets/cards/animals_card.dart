@@ -1,4 +1,4 @@
-// lib/widgets/cards/animals_card.dart
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
 import '../../model/animals.dart';
@@ -14,15 +14,19 @@ class AnimalCard extends StatefulWidget {
 
 class _AnimalCardState extends State<AnimalCard> {
   double _scale = 1.0;
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   void _onTap() async {
-    // Aumenta a escala
     setState(() {
       _scale = 1.1;
     });
-    // Adiciona uma pequena pausa antes de diminuir
+
+    await _audioPlayer.stop();
+    await _audioPlayer.play(
+      AssetSource(widget.animal.soundPath.replaceFirst('assets/', '')),
+    );
     await Future.delayed(const Duration(milliseconds: 150));
-    // Volta ao tamanho original
+
     setState(() {
       _scale = 1.0;
     });
